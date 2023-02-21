@@ -3,14 +3,17 @@
 # Communications API C++ SDK Media Injection Demo
 
 ## Prerequisites
-All Sytems:
+All sytems:
 - CMake 3.23
 - Python 3
 - A Dolby.io account and access to the Dolby.io dashboard
 
-Windows Only:
-- msys2
-- unzip (inside msys2 run "pacman -S unzip")
+Linux only:
+- PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
+
+Windows only:
+- [msys2](https://www.msys2.org/)
+- unzip (inside msys2 shell run **pacman -S unzip**)
 
 ## Supported platforms
 This project relies on the Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
