@@ -4,7 +4,7 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  *
- *                Copyright (C) 2022 by Dolby Laboratories.
+ *                Copyright (C) 2022-2023 by Dolby Laboratories.
  ***************************************************************************/
 
 #include "wrappers/mediaio.h"
