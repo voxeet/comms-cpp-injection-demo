@@ -1,0 +1,5 @@
+*.env
+ext-lib/
+build/
+CMakeLists.txt.user
+.DS_Store

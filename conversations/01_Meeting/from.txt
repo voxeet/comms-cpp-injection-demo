@@ -1,0 +1,8 @@
+From: //comms/media/raw_anechoic/weekly_meeting/
+Mark-Michael.wav : 00_Mark.wav
+Anna-Judy.wav : 01_AnnaA.wav
+Jane-Celine.wav : 02_Jane.wav
+John-Hamish.wav : 03_John.wav
+Pete-David.wav : 04_Pete.wav
+Steven-Andrew.wav : 05_Steven.wav
+
