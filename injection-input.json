@@ -1,0 +1,10 @@
+{
+    "access":
+    {
+        "token_server_url": "",
+        "client_access_token": ""    
+    },
+    "conf_alias": "demo",
+    "spatial_style": "shared",
+    "conversations": "00,01"
+}

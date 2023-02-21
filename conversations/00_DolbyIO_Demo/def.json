@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Dan",
+        "media": "Dan.m4a",
+        "x": 30,
+        "y": 0,
+        "z": 30,
+		"r": 0,
+		"t1": "robot",
+		"t2": "red"
+    },
+    {
+        "name": "JC",
+        "media": "JC.m4a",
+        "x": 28,
+        "y": 0,
+        "z": 30,
+		"r": 60,
+        "t1": "chicken",
+        "t2": "yellow"
+    },
+    {
+        "name": "Ruth",
+        "media": "Ruth.m4a",
+        "x": 30,
+        "y": 0,
+        "z": 28,
+		"r": 120,
+        "t1": "robot",
+        "t2": "green"
+    }
+]

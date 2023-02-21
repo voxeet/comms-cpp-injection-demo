@@ -1,0 +1,50 @@
+[
+    {
+		"name": "AnnaA",
+		"media": "AnnaA.m4a",
+		"x": -30,
+		"y": 1.2,
+		"z": -30,
+		"r": -90
+    },
+    {
+		"name": "Jane",
+		"media": "Jane.m4a",
+		"x": -28,
+		"y": 1.2,
+		"z": -30,
+		"r": 180
+    },
+    {
+		"name": "JohnH",
+		"media": "JohnH.m4a",
+		"x": -28,
+		"y": 1.2,
+		"z": -28,
+		"r": 120
+    },
+    {
+		"name": "Mark",
+		"media": "Mark.m4a",
+		"x": -30,
+		"y": 1.2,
+		"z": -28,
+		"r": 90
+    },
+    {
+		"name": "Pete",
+		"media": "Pete.m4a",
+		"x": -28,
+		"y": 1.2,
+		"z": -26,
+		"r": 90
+    },
+    {
+		"name": "Steve",
+		"media": "Steve.m4a",
+		"x": -27,
+		"y": 1.2,
+		"z": -27,
+		"r": 120
+    }
+]
