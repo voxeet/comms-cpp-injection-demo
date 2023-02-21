@@ -21,8 +21,9 @@
 
 namespace dolbyio::comms::sample {
 
-// The commnds handler class is used to provide a robust way for our sample application to
-// provide different command line and interactive switches for different parts of the SDK.
+// The commnds handler class is used to provide a robust way for our sample
+// application to provide different command line and interactive switches for
+// different parts of the SDK.
 class commands_handler {
   using command = std::string;
   using commands = std::vector<std::string>;
@@ -46,7 +47,10 @@ class commands_handler {
   void add_interactive_command(const command&, const description&, action);
   enum class mandatory { no, yes };
   void add_command_line_switch(const commands&, const description&, action);
-  void add_command_line_switch(const commands&, const description&, action_with_arg, mandatory = mandatory::no);
+  void add_command_line_switch(const commands&,
+                               const description&,
+                               action_with_arg,
+                               mandatory = mandatory::no);
 
   void print_interactive_options() const;
 
@@ -70,7 +74,11 @@ class commands_handler {
   };
 
   enum class has_argument { no, yes };
-  void add_command_line_switch(const commands&, const description&, action_with_arg, has_argument, mandatory);
+  void add_command_line_switch(const commands&,
+                               const description&,
+                               action_with_arg,
+                               has_argument,
+                               mandatory);
 
   void show_help() const;
   void show_help_and_throw(const std::string& what) const;

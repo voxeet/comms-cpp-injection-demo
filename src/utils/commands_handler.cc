@@ -16,10 +16,11 @@
 namespace dolbyio::comms::sample {
 
 commands_handler::commands_handler() {
-  add_command_line_switch({"-h", "--help"}, "\n\tShow help and exit.", [this]() {
-    show_help();
-    std::exit(EXIT_SUCCESS);
-  });
+  add_command_line_switch({"-h", "--help"}, "\n\tShow help and exit.",
+                          [this]() {
+                            show_help();
+                            std::exit(EXIT_SUCCESS);
+                          });
 }
 
 void commands_handler::add_interactor(std::shared_ptr<interactor> obj) {
@@ -30,14 +31,17 @@ void commands_handler::add_interactor(std::shared_ptr<interactor> obj) {
   interactors_.push_back(std::move(obj));
 }
 
-void commands_handler::add_interactive_command(const command& command, const description& description, action action) {
+void commands_handler::add_interactive_command(const command& command,
+                                               const description& description,
+                                               action action) {
   if (enabled_)
     throw std::runtime_error("SDK is already set");
 
   auto res = interactive_actions_.find(command);
   if (res == interactive_actions_.end())
-    interactive_actions_.insert(
-        std::make_pair(command, std::vector<description_and_action>{std::make_pair(description, std::move(action))}));
+    interactive_actions_.insert(std::make_pair(
+        command, std::vector<description_and_action>{
+                     std::make_pair(description, std::move(action))}));
   else
     res->second.push_back(std::make_pair(description, std::move(action)));
 }
@@ -46,14 +50,17 @@ void commands_handler::add_command_line_switch(const commands& commands,
                                                const description& description,
                                                action action) {
   add_command_line_switch(
-      commands, description, [a = std::move(action)](const command_arg&) { a(); }, has_argument::no, mandatory::no);
+      commands, description,
+      [a = std::move(action)](const command_arg&) { a(); }, has_argument::no,
+      mandatory::no);
 }
 
 void commands_handler::add_command_line_switch(const commands& commands,
                                                const description& description,
                                                action_with_arg action,
                                                mandatory is_mandatory) {
-  add_command_line_switch(commands, description, std::move(action), has_argument::yes, is_mandatory);
+  add_command_line_switch(commands, description, std::move(action),
+                          has_argument::yes, is_mandatory);
 }
 
 void commands_handler::add_command_line_switch(const commands& commands,
@@ -71,7 +78,8 @@ void commands_handler::add_command_line_switch(const commands& commands,
   // first command is the main switch
   auto it = commands.cbegin();
   const auto& sw_name = *it;
-  command_line_switch sw_data{description, std::move(action), has_argument == has_argument::yes,
+  command_line_switch sw_data{description, std::move(action),
+                              has_argument == has_argument::yes,
                               is_mandatory == mandatory::yes};
 
   // all other commands are aliases
@@ -83,7 +91,8 @@ void commands_handler::add_command_line_switch(const commands& commands,
   command_line_switches_.emplace(sw_name, std::move(sw_data));
 }
 
-commands_handler::command_line_switch& commands_handler::find_switch(const command& command) {
+commands_handler::command_line_switch& commands_handler::find_switch(
+    const command& command) {
   auto cmd = command;
 
   const auto it_alias = aliases_.find(command);
@@ -115,12 +124,14 @@ void commands_handler::handle_interactive_command(const command& command) {
     try {
       iter.second();
     } catch (const std::exception& ex) {
-      std::cerr << "Command: " << command << " Failed: " << ex.what() << std::endl;
+      std::cerr << "Command: " << command << " Failed: " << ex.what()
+                << std::endl;
     }
   }
 }
 
-void commands_handler::handle_command_line_option(const command& option, const command_arg& arg) {
+void commands_handler::handle_command_line_option(const command& option,
+                                                  const command_arg& arg) {
   if (enabled_)
     throw std::runtime_error("SDK is already set");
 
@@ -170,7 +181,8 @@ void commands_handler::show_help_and_throw(const std::string& what) const {
   throw std::runtime_error{what};
 }
 
-std::string commands_handler::get_full_switch_description(const command& command) const {
+std::string commands_handler::get_full_switch_description(
+    const command& command) const {
   std::ostringstream oss;
 
   const auto& s = command_line_switches_.at(command);
@@ -193,8 +205,10 @@ commands_handler::commands commands_handler::get_interactive_actions() const {
 void commands_handler::verify_new_switches(const commands& commands) const {
   std::set<command> cmds_uniq;
   for (const auto& cmd : commands)
-    if (!cmds_uniq.insert(cmd).second || command_line_switches_.count(cmd) || aliases_.count(cmd))
-      throw std::runtime_error{"Duplicate definition of command line switch " + cmd};
+    if (!cmds_uniq.insert(cmd).second || command_line_switches_.count(cmd) ||
+        aliases_.count(cmd))
+      throw std::runtime_error{"Duplicate definition of command line switch " +
+                               cmd};
 }
 
 void commands_handler::verify_all_mandatory_switches_set() const {
@@ -209,7 +223,8 @@ void commands_handler::verify_all_mandatory_switches_set() const {
   std::ostringstream oss;
   for (const auto& s : unset_switches)
     oss << "\n    " << get_full_switch_description(s);
-  show_help_and_throw("The following mandatory arguments were not set:" + oss.str());
+  show_help_and_throw("The following mandatory arguments were not set:" +
+                      oss.str());
 }
 
 void commands_handler::command_line_switch::handle(const command_arg& arg) {

@@ -3,6 +3,7 @@
 #
 import requests
 import json
+import platform
 import os
 from subprocess import Popen, PIPE
 import argparse
@@ -16,7 +17,11 @@ import getpass
 injection_input = 'injection-input.json'
 directory_prefix= '/tmp/' + getpass.getuser() + '/cpp-injection/'
 conversations_folder = 'conversations'
-binary = 'src/cpp_injection_demo'
+print(platform.system())
+if platform.system() == 'Windows':
+  binary = 'src/Debug/cpp_injection_demo'
+else:
+  binary = 'src/cpp_injection_demo'
 
 def fetch_token(url):
     response = requests.get(url)

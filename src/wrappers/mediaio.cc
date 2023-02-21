@@ -121,7 +121,8 @@ void media_io_wrapper::seek_to_in_file() {
   }
 }
 
-void media_io_wrapper::register_command_line_handlers(commands_handler& handler) {
+void media_io_wrapper::register_command_line_handlers(
+    commands_handler& handler) {
   // The media io switch sets the application to run as regular sending
   // video/audio from camera
   handler.add_command_line_switch(
@@ -232,7 +233,8 @@ void media_io_wrapper::register_command_line_handlers(commands_handler& handler)
       });
 }
 
-void media_io_wrapper::register_interactive_commands(commands_handler& handler) {
+void media_io_wrapper::register_interactive_commands(
+    commands_handler& handler) {
   if (!media_io_) {
     if (!cmdline_config_touched_.empty()) {
       std::cerr << "The following command-line params will be ignored, because "

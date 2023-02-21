@@ -31,4 +31,4 @@ int to_int(const std::string& value, const char* option) {
 double to_double(const std::string& value, const char* option) {
   return static_cast<double>(to_int(value, option));
 }
-}
+}  // namespace dolbyio::comms::sample::command_line
