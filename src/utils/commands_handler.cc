@@ -1,4 +1,13 @@
-#include "commands_handler.h"
+/***************************************************************************
+ * This program is licensed by the accompanying "license" file. This file is
+ * distributed "AS IS" AND WITHOUT WARRANTY OF ANY KIND WHATSOEVER, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ *                Copyright (C) 2022-2023 by Dolby Laboratories.
+ ***************************************************************************/
+
+#include "utils/commands_handler.h"
 
 #include <iostream>
 #include <sstream>
