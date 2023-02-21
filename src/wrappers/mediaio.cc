@@ -11,6 +11,10 @@
 
 namespace dolbyio::comms::sample {
 
+media_io_wrapper::~media_io_wrapper() {
+  media_io_wrapper::set_sdk(nullptr);
+}
+
 void media_io_wrapper::set_sdk(dolbyio::comms::sdk* sdk) {
   std::lock_guard<std::mutex> lock(sdk_lock_);
   if (!sdk && sdk_) {
@@ -84,10 +88,6 @@ void media_io_wrapper::initialize_injection() {
     wait(sdk_->media_io().set_audio_source(injector_.get()));
   if (video)
     wait(sdk_->video().local().start(camera_device(), injector_.get()));
-}
-
-media_io_wrapper::~media_io_wrapper() {
-  set_sdk(nullptr);
 }
 
 void media_io_wrapper::set_initial_capture(bool audio, bool video) {

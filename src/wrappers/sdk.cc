@@ -10,10 +10,13 @@
 #include "wrappers/sdk.h"
 #include "utils/commands_handler.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace dolbyio::comms::sample {
+
+sdk_wrapper::~sdk_wrapper() {
+  sdk_wrapper::set_sdk(nullptr);
+}
 
 void sdk_wrapper::check_if_sdk_set() {
   if (!sdk_)
@@ -102,9 +105,7 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
   handler.add_command_line_switch(
       {"-k"},
       "<token>\n\tAccess token required to connect to the DolbyIo backend.",
-      [this](const std::string& arg) {
-        params_.access_token = arg;
-      },
+      [this](const std::string& arg) { params_.access_token = arg; },
       commands_handler::mandatory::yes);
 
   handler.add_command_line_switch(
