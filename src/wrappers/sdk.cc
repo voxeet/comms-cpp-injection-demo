@@ -10,10 +10,13 @@
 #include "wrappers/sdk.h"
 #include "utils/commands_handler.h"
 
-#include <iostream>
 #include <sstream>
 
 namespace dolbyio::comms::sample {
+
+sdk_wrapper::~sdk_wrapper() {
+  sdk_wrapper::set_sdk(nullptr);
+}
 
 void sdk_wrapper::check_if_sdk_set() {
   if (!sdk_)
@@ -102,9 +105,7 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
   handler.add_command_line_switch(
       {"-k"},
       "<token>\n\tAccess token required to connect to the DolbyIo backend.",
-      [this](const std::string& arg) {
-        params_.access_token = arg;
-      },
+      [this](const std::string& arg) { params_.access_token = arg; },
       commands_handler::mandatory::yes);
 
   handler.add_command_line_switch(
@@ -160,6 +161,12 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         av.video = arg.find('V') != std::string::npos;
         params_.conf.send_audio_video = av;
       });
+
+  handler.add_command_line_switch(
+      {"-opus", "--opus"},
+      "\n\tCreate an opus conference. Remember spatial audio only works with "
+      "Dolby Voice.",
+      [this]() { params_.conf.dolby_voice = false; });
 
   handler.add_command_line_switch({"-s", "--send_only"},
                                   "\n\tJoin as send-only user.",
@@ -242,6 +249,7 @@ sdk_wrapper::conference_options() const {
   dolbyio::comms::services::conference::conference_options create{};
   create.alias = params_.conf.alias;
   create.params.spatial_audio_style = params_.conf.spatial;
+  create.params.dolby_voice = params_.conf.dolby_voice;
   return create;
 }
 

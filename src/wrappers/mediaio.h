@@ -23,8 +23,7 @@ namespace dolbyio::comms::sample {
 
 class media_io_wrapper : public interactor {
  public:
-  media_io_wrapper(command_line::sdk& sdk_params)
-      : sdk_params_(sdk_params) {}
+  media_io_wrapper(command_line::sdk& sdk_params) : sdk_params_(sdk_params) {}
   ~media_io_wrapper() override;
 
   void set_initial_capture(bool audio, bool video);

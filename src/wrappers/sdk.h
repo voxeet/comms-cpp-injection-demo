@@ -20,6 +20,8 @@ namespace dolbyio::comms::sample {
 
 class sdk_wrapper : public interactor {
  public:
+  ~sdk_wrapper() override;
+
   services::session::user_info session_options() const;
   services::conference::conference_options conference_options() const;
   services::conference::join_options join_options() const;

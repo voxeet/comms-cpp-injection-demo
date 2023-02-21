@@ -25,6 +25,6 @@ class interactor {
   virtual void set_sdk(dolbyio::comms::sdk* sdk) = 0;
 };
 
-}
+}  // namespace sample
 
-}  // namespace dolbyio::comms::sample
+}  // namespace dolbyio::comms

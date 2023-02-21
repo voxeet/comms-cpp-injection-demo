@@ -9,7 +9,7 @@ endif(WIN32)
 
 function(copy_runtime_deps_dlls __target)
 	if(WIN32)
-		set(DLL_PATH "${CMAKE_BINARY_DIR}")
+		set(DLL_PATH "${CMAKE_SOURCE_DIR}/ext-lib/sdk/bin/")
 		set(SDK_LOCATION ${DLL_PATH}/dolbyio_comms_sdk.dll)
 		set(MEDIA_LOCATION ${DLL_PATH}/dolbyio_comms_media.dll)
 		set(MEDIA_ADDON_LOCATION ${DLL_PATH}/dolbyio_comms_multimedia_streaming_addon.dll)

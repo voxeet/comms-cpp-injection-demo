@@ -4,6 +4,7 @@ echo "If you want your own version and not default you must run script like:"
 echo "bash setup.sh {sdk_version}" 
 
 DEFAULT_SDK_VERSION="2.3.1"
+WORK_DIR=$(pwd)
 
 set_proper_sdk_version() {
 	sdk_version=$1
@@ -72,11 +73,11 @@ unzip_sdk_package() {
 
 build_cpp_injection_demo() {
 	popd
-	if [ ! -d build/ ]; then
-		mkdir build
+	if [ ! -d $WORK_DIR/build/ ]; then
+		mkdir $WORK_DIR/build
 	fi
 
-	cd build/
+	cd $WORK_DIR/build/
 
 	cmake ../
 	cmake --build . -j 16
@@ -88,10 +89,10 @@ build_cpp_injection_demo() {
 set_proper_sdk_version
 
 # Enter ext-lib to place all the dependencies
-if [ ! -d ext-lib ]; then
-	mkdir ext-lib/
+if [ ! -d $WORK_DIR/ext-lib ]; then
+	mkdir $WORK_DIR/ext-lib/
 fi
-pushd ext-lib/
+pushd $WORK_DIR/ext-lib/
 
 # Fetch SDK package if hashes do not match
 if should_fetch_new_sdk; then
