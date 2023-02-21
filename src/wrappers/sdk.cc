@@ -162,6 +162,12 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         params_.conf.send_audio_video = av;
       });
 
+  handler.add_command_line_switch(
+      {"-opus", "--opus"},
+      "\n\tCreate an opus conference. Remember spatial audio only works with "
+      "Dolby Voice.",
+      [this]() { params_.conf.dolby_voice = false; });
+
   handler.add_command_line_switch({"-s", "--send_only"},
                                   "\n\tJoin as send-only user.",
                                   [this]() { params_.conf.send_only = true; });
@@ -243,6 +249,7 @@ sdk_wrapper::conference_options() const {
   dolbyio::comms::services::conference::conference_options create{};
   create.alias = params_.conf.alias;
   create.params.spatial_audio_style = params_.conf.spatial;
+  create.params.dolby_voice = params_.conf.dolby_voice;
   return create;
 }
 
