@@ -28,8 +28,8 @@ dolbyio::comms::async_result<void> apply_spatial_audio_configuration(
   auto params = sdk->get_params().conf;
 
   // If using opus or listener or no spatial audio do nothing
-  if (!params.dolby_voice || params.nonlistener_join ||
-      params.spatial != dolbyio::comms::spatial_audio_style::disabled) {
+  if (!params.dolby_voice || !params.nonlistener_join ||
+      params.spatial == dolbyio::comms::spatial_audio_style::disabled) {
     return {};
   }
 
