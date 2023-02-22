@@ -1,5 +1,7 @@
 add_executable(cpp_injection_demo 
 	main.cc
+	utils/async_accumulator.h
+	utils/async_accumulator.cc
 	utils/commands_handler.h
 	utils/commands_handler.cc
 	utils/interactor.h
@@ -17,10 +19,6 @@ if(LINUX)
 		linux/daemonize.cc
 	)
 endif(LINUX)
-
-target_compile_definitions(cpp_injection_demo PUBLIC
-	DOLBYIO_COMMS_ENABLE_DEPRECATED_WAIT
-)
 
 target_include_directories(cpp_injection_demo PUBLIC
 	${DOLBYIO_SDK_HEADERS}

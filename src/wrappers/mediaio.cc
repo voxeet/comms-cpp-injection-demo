@@ -8,6 +8,7 @@
  ***************************************************************************/
 
 #include "wrappers/mediaio.h"
+#include "utils/async_accumulator.h"
 
 namespace dolbyio::comms::sample {
 
@@ -19,12 +20,18 @@ void media_io_wrapper::set_sdk(dolbyio::comms::sdk* sdk) {
   std::lock_guard<std::mutex> lock(sdk_lock_);
   if (!sdk && sdk_) {
     sdk_params_.video_frame_handler = nullptr;
-    wait(sdk_->video().local().stop());
+    auto promise = std::make_shared<std::promise<void>>();
+    auto future = promise->get_future();
+    stop_video()
+        .then([promise]() { promise->set_value(); })
+        .on_error(
+            [promise](auto&& ex) { promise->set_exception(std::move(ex)); });
+    future.get();
   }
   sdk_ = sdk;
 }
 
-void media_io_wrapper::initialize_injection() {
+async_result<void> media_io_wrapper::initialize_injection() {
   if (!media_io_)
     throw std::runtime_error(
         "Attempting to initialize the injection while not requested");
@@ -38,7 +45,7 @@ void media_io_wrapper::initialize_injection() {
     std::cerr << "No injection requested for audio or video, the input file "
                  "will not be used"
               << std::endl;
-    return;
+    return {};
   }
 
   if (!injector_) {
@@ -63,19 +70,11 @@ void media_io_wrapper::initialize_injection() {
             if (status.current_state ==
                 dolbyio::comms::sample::source_state::STOPPED) {
               if (audio)
-                sdk_->audio()
-                    .local()
-                    .stop()
-                    .then([]() { std::cerr << "audio stopped\n"; })
-                    .on_error(
-                        [](auto&&) { std::cerr << "Error stopping audio\n"; });
+                stop_audio().on_error(
+                    [](auto&&) { std::cerr << "Error stopping audio\n"; });
               if (video)
-                sdk_->video()
-                    .local()
-                    .stop()
-                    .then([]() { std::cerr << "video stopped\n"; })
-                    .on_error(
-                        [](auto&&) { std::cerr << "Error stopping video\n"; });
+                stop_video().on_error(
+                    [](auto&&) { std::cerr << "Error stopping video\n"; });
             }
           }
         });
@@ -84,10 +83,13 @@ void media_io_wrapper::initialize_injection() {
   }
 
   // Attach injector as audio/video source if that media is to be enabled
+  async_result_accumulator accumulator;
   if (audio)
-    wait(sdk_->media_io().set_audio_source(injector_.get()));
+    accumulator += sdk_->media_io().set_audio_source(injector_.get());
   if (video)
-    wait(sdk_->video().local().start(camera_device(), injector_.get()));
+    accumulator +=
+        sdk_->video().local().start(camera_device(), injector_.get());
+  return std::move(accumulator);
 }
 
 void media_io_wrapper::set_initial_capture(bool audio, bool video) {
@@ -95,6 +97,16 @@ void media_io_wrapper::set_initial_capture(bool audio, bool video) {
     source_->set_audio_capture(audio);
     source_->set_video_capture(video);
   }
+}
+
+async_result<void> media_io_wrapper::stop_audio() {
+  return sdk_->audio().local().stop().then(
+      []() { std::cerr << "Audio has been stopped\n"; });
+}
+
+async_result<void> media_io_wrapper::stop_video() {
+  return sdk_->video().local().stop().then(
+      []() { std::cerr << "Video has been stopped\n"; });
 }
 
 void media_io_wrapper::new_file(bool add) {
