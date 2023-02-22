@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
     dolbyio::comms::sdk::log_settings log_settings;
     log_settings.log_directory = sdk_wrap->get_params().log_dir;
     log_settings.sdk_log_level = sdk_wrap->get_params().sdk_log_level;
-    log_settings.sdk_log_level = sdk_wrap->get_params().me_log_level;
+    log_settings.media_log_level = sdk_wrap->get_params().me_log_level;
     dolbyio::comms::sdk::set_log_settings(std::move(log_settings));
 
     // Create the SDK passing in the token and a refresh token callback
@@ -134,7 +134,6 @@ int main(int argc, char** argv) {
       command_handler.handle_interactive_command(command);
     }
 #endif
-
     {
       // Using promise/future to make the thread wait till this entire
       // asynchronous chain is completed. But like in general you could do
