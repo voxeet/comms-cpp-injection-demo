@@ -30,7 +30,7 @@ class media_io_wrapper : public interactor {
 
   // interactor interface
   void set_sdk(dolbyio::comms::sdk* sdk) override;
-  void initialize_injection();
+  async_result<void> initialize_injection();
   void register_command_line_handlers(commands_handler& handler) override;
   void register_interactive_commands(commands_handler& handler) override;
 
@@ -39,6 +39,8 @@ class media_io_wrapper : public interactor {
   const command_line::mediaio& get_params() const { return params_; }
 
  private:
+  async_result<void> stop_video();
+  async_result<void> stop_audio();
   void new_file(bool add);
   void seek_to_in_file();
 

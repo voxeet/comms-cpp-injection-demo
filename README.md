@@ -11,10 +11,6 @@ All sytems:
 Linux only:
 - PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
 
-Windows only:
-- [msys2](https://www.msys2.org/)
-- unzip (inside msys2 shell run **pacman -S unzip**)
-
 ## Supported platforms
 This project relies on the Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
 
@@ -26,13 +22,13 @@ If building on Windows make sure you have installed msys2 shell and unzip inside
 2. cd cpp-injection-demo
 3. git checkout main 
 ```
-Building on MacOS or Linux:
+Building on MacOS or Linux in terminal navigate to the comms-cpp-injection-demo/ directory and run:
 ```
-4. bash setup.sh
+4. bash setup/unix.sh
 ```
-Building on Windows:
+Building on Windows in Command Prompt navigate to the comms-cpp-injection-demo\ directory and run:
 ```
-4. setup.bat
+4. setup\window.bat
 ```
 
 ## Getting Started
@@ -54,13 +50,10 @@ python3 demo.py
 On MacOS/Windows the application will just run in terminal so entering **q** on command line will exit. Remember that each injector is running in its own process so you will have to **q+enter** for each spawned injector
 instance.
 
-When running on Ubuntu the process will run as daemon and is to be stopped using the python script (**when prompted by script make sure to provide same ALIAS and conversation as when you ran it**). 
+When running on Ubuntu the process will run as daemon and is to be stopped using the python script:
 ```
 python3 demo.py -stop yes
 ```
 
-## Token Refresh
-A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) must be provided to create the SDK. These tokens expire after an allotted amount of time and 
-must be refreshed to ensure connection to the Dolby.io backend. The SDK will request from the application at 1/2 and 3/4 of the expiry time to refresh the token with a new valid one.
-
-Please note that this sample application does not provide a mechanism for fetching access tokens. This portion needs to be added manually. Please take a look at the [sdk::create](https://api-references.dolby.io/comms-sdk-cpp/api/sdk/sdk.html#_CPPv4N7dolbyio5comms3sdk6createERKNSt6stringERRNSt8functionIFvNSt10unique_ptrI13refresh_tokenEEEEE) function where the token fetching callback is provided to the SDK and also the [refresh_token_cb](https://api-references.dolby.io/comms-sdk-cpp/api/sdk/sdk.html#_CPPv4N7dolbyio5comms13refresh_tokenE) interface which is used to provide the token to the SDK after it is fetched for more details on how to do this.
+## Access Token
+A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) must be provided to create the SDK. 

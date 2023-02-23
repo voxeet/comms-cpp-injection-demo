@@ -1,6 +1,7 @@
 #include "wrappers/mediaio.h"
 #include "wrappers/sdk.h"
 
+#include "utils/async_accumulator.h"
 #include "utils/commands_handler.h"
 
 #include <vector>
@@ -32,19 +33,19 @@ dolbyio::comms::async_result<void> apply_spatial_audio_configuration(
       params.spatial == dolbyio::comms::spatial_audio_style::disabled) {
     return {};
   }
-
   // Set default spatial environment
-  dolbyio::comms::spatial_audio_batch_update batch_update;
   dolbyio::comms::spatial_position right{1, 0, 0};
   dolbyio::comms::spatial_position up{0, 1, 0};
   dolbyio::comms::spatial_position forward{0, 0, -1};
   dolbyio::comms::spatial_scale scale{5, 5, 5};
 
+  dolbyio::comms::spatial_audio_batch_update batch_update;
   batch_update.set_spatial_environment(scale, forward, up, right);
   batch_update.set_spatial_direction(params.initial_spatial_direction);
   batch_update.set_spatial_position(sdk->session_info().participant_id.value(),
                                     params.initial_spatial_position);
 
+  // Provide all updates in one go to the SDK
   return sdk->set_spatial_configuration(std::move(batch_update));
 }
 
@@ -101,23 +102,27 @@ int main(int argc, char** argv) {
           // provide this token to the dolbio::comms::refresh_token interface.
         });
 
-    // Set the SDK instance on the wrappers and initialize the injection
+    // Set the SDK instance on the wrappers
     command_handler.set_sdk(sdk.get());
-    media_io_wrap->initialize_injection();
     {
       // Using promise/future to make the thread wait till this entire
       // asynchronous chain is completed. But like in general you could do
       // without just async it all.
       auto promise = std::make_shared<std::promise<void>>();
       auto future = promise->get_future();
-      sdk_wrap->open_session()
+      media_io_wrap->initialize_injection()
+          .then([sdk_wrap]() { return sdk_wrap->open_session(); })
           .then([sdk_wrap]() {
             return sdk_wrap->create_and_or_join_conference();
           })
-          .then([sdk_wrap]() {
-            return apply_spatial_audio_configuration(sdk_wrap.get());
+          .then([sdk_wrap]() -> dolbyio::comms::async_result<void> {
+            // The following operations can happen concurrently, but their
+            // combined result must be waited for before start capture.
+            async_result_accumulator accumulator;
+            accumulator += apply_spatial_audio_configuration(sdk_wrap.get());
+            accumulator += sdk_wrap->set_audio_processing();
+            return std::move(accumulator);
           })
-          .then([sdk_wrap]() { return sdk_wrap->set_audio_processing(); })
           .then([sdk_wrap, media_io_wrap, promise]() {
             auto media = sdk_wrap->get_params().conf;
             media_io_wrap->set_initial_capture(media.join_with_audio(),

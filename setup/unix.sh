@@ -4,7 +4,7 @@ echo "If you want your own version and not default you must run script like:"
 echo "bash setup.sh {sdk_version}" 
 
 DEFAULT_SDK_VERSION="2.3.1"
-WORK_DIR=$(pwd)
+WORK_DIR="$(pwd)"
 
 set_proper_sdk_version() {
 	sdk_version=$1
