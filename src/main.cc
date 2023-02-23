@@ -34,17 +34,17 @@ dolbyio::comms::async_result<void> apply_spatial_audio_configuration(
   }
 
   // Set default spatial environment
+  dolbyio::comms::spatial_audio_batch_update batch_update;
   dolbyio::comms::spatial_position right{1, 0, 0};
   dolbyio::comms::spatial_position up{0, 1, 0};
   dolbyio::comms::spatial_position forward{0, 0, -1};
-  dolbyio::comms::spatial_scale scale{1, 1, 1};
-  dolbyio::comms::spatial_audio_batch_update batch_update;
+  dolbyio::comms::spatial_scale scale{5, 5, 5};
+
   batch_update.set_spatial_environment(scale, forward, up, right);
   batch_update.set_spatial_direction(params.initial_spatial_direction);
-
-  dolbyio::comms::spatial_position position{params.initial_spatial_position};
   batch_update.set_spatial_position(sdk->session_info().participant_id.value(),
-                                    std::move(position));
+                                    params.initial_spatial_position);
+
   return sdk->set_spatial_configuration(std::move(batch_update));
 }
 
