@@ -19,7 +19,7 @@ directory_prefix= '/tmp/' + getpass.getuser() + '/cpp-injection/'
 conversations_folder = 'conversations'
 print(platform.system())
 if platform.system() == 'Windows':
-  binary = 'src/Debug/cpp_injection_demo'
+  binary = 'src/RelWithDebInfo/cpp_injection_demo'
 else:
   binary = 'src/cpp_injection_demo'
 

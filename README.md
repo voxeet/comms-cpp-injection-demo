@@ -11,10 +11,6 @@ All sytems:
 Linux only:
 - PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
 
-Windows only:
-- [msys2](https://www.msys2.org/)
-- unzip (inside msys2 shell run **pacman -S unzip**)
-
 ## Supported platforms
 This project relies on the Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
 
@@ -26,13 +22,13 @@ If building on Windows make sure you have installed msys2 shell and unzip inside
 2. cd cpp-injection-demo
 3. git checkout main 
 ```
-Building on MacOS or Linux:
+Building on MacOS or Linux in terminal navigate to the comms-cpp-injection-demo/ directory and run:
 ```
-4. bash setup.sh
+4. bash setup/unix.sh
 ```
-Building on Windows:
+Building on Windows in Command Prompt navigate to the comms-cpp-injection-demo\ directory and run:
 ```
-4. setup.bat
+4. setup\window.bat
 ```
 
 ## Getting Started
