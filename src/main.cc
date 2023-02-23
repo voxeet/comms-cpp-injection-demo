@@ -92,8 +92,14 @@ int main(int argc, char** argv) {
     dolbyio::comms::sdk::set_log_settings(std::move(log_settings));
 
     // Create the SDK passing in the token and a refresh token callback
-    sdk = dolbyio::comms::sdk::create(sdk_wrap->get_params().access_token,
-                                      [](auto&&) {});
+    sdk = dolbyio::comms::sdk::create(
+        sdk_wrap->get_params().access_token,
+        [](std::unique_ptr<dolbyio::comms::refresh_token>&&) {
+          // This sample currently does not provide any token fetching mechanism
+          // It is the responsibilty of the application to provide a lambda here
+          // which can fetch a token when it is invoked by the SDK and then
+          // provide this token to the dolbio::comms::refresh_token interface.
+        });
 
     // Set the SDK instance on the wrappers and initialize the injection
     command_handler.set_sdk(sdk.get());
