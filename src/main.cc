@@ -24,31 +24,6 @@ void signal_handler(int sig) {
 }
 #endif
 
-dolbyio::comms::async_result<void> apply_spatial_audio_configuration(
-    sdk_wrapper* sdk) {
-  auto params = sdk->get_params().conf;
-
-  // If using opus or listener or no spatial audio do nothing
-  if (!params.dolby_voice || !params.nonlistener_join ||
-      params.spatial == dolbyio::comms::spatial_audio_style::disabled) {
-    return {};
-  }
-  // Set default spatial environment
-  dolbyio::comms::spatial_position right{1, 0, 0};
-  dolbyio::comms::spatial_position up{0, 1, 0};
-  dolbyio::comms::spatial_position forward{0, 0, -1};
-  dolbyio::comms::spatial_scale scale{5, 5, 5};
-
-  dolbyio::comms::spatial_audio_batch_update batch_update;
-  batch_update.set_spatial_environment(scale, forward, up, right);
-  batch_update.set_spatial_direction(params.initial_spatial_direction);
-  batch_update.set_spatial_position(sdk->session_info().participant_id.value(),
-                                    params.initial_spatial_position);
-
-  // Provide all updates in one go to the SDK
-  return sdk->set_spatial_configuration(std::move(batch_update));
-}
-
 int main(int argc, char** argv) {
   // Declare the SDK pointer first so it outlives
   std::unique_ptr<dolbyio::comms::sdk> sdk{};
@@ -119,7 +94,7 @@ int main(int argc, char** argv) {
             // The following operations can happen concurrently, but their
             // combined result must be waited for before start capture.
             async_result_accumulator accumulator;
-            accumulator += apply_spatial_audio_configuration(sdk_wrap.get());
+            accumulator += sdk_wrap->apply_spatial_audio_configuration();
             accumulator += sdk_wrap->set_audio_processing();
             return std::move(accumulator);
           })
