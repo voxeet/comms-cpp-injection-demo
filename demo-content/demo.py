@@ -1,18 +1,19 @@
 #! /usr/bin/python3
 #
 #
-import requests
-import json
-import platform
-import os
-from subprocess import Popen, PIPE
 import argparse
-import string
-import random
 import base64
+import collections
+import getpass
+import json
+import os
+import platform
+import random
+import requests
 import signal
 import shutil
-import getpass
+import string
+from subprocess import Popen, PIPE
 
 injection_input = 'injection-input.json'
 directory_prefix= '/tmp/' + getpass.getuser() + '/cpp-injection/'
@@ -81,7 +82,11 @@ def parse_injection_input():
             client_access_token = content['access']['client_access_token']
             alias = content['conf_alias']
             conversations = content['conversations']
-            spatial_style = content['spatial_style']
+            style = content['spatial']['style']
+            scale = str(content['spatial']['scale']['x']) + ";" + str(content['spatial']['scale']['y']) + ";" + str(content['spatial']['scale']['z'])
+            right = str(content['spatial']['right']['x']) + ";" + str(content['spatial']['right']['y']) + ";" + str(content['spatial']['right']['z'])
+            up = str(content['spatial']['up']['x']) + ";" + str(content['spatial']['up']['y']) + ";" + str(content['spatial']['up']['z'])
+            forward = str(content['spatial']['forward']['x']) + ";" + str(content['spatial']['forward']['y']) + ";" + str(content['spatial']['forward']['z'])
             if len(token_server_url) > 0:
                 token = fetch_token(token_server_url)
                 if token is not None:
@@ -102,16 +107,16 @@ def parse_injection_input():
                 print(f'You have not specified conference alias in {injection_input}, default value "demo" will be used')
                 alias = 'demo'
             
-            if spatial_style.lower() not in ['shared', 'individual', 'none']:
+            if style.lower() not in ['shared', 'individual', 'none']:
                 print(f'You have not specified a valid input [{spatial_style}] for "spatial_style", default value "shared" will be used')
                 spatial_style = 'shared'
 
-            return client_access_token, alias, conversations, spatial_style
+            return client_access_token, alias, conversations, style, scale, right, up, forward 
 
         except Exception as exp:
             print(f'Failed parsing injection input file: {exp}')
 
-def collect_commands(conversation, alias, client_access_token, bin, spatial_style, args):
+def collect_commands(conversation, alias, client_access_token, style, scale, right, up, forward, args):
     folder = f'{conversations_folder}/{conversation}/'
     def_json = f'{folder}def.json'
     cmds = []
@@ -128,18 +133,18 @@ def collect_commands(conversation, alias, client_access_token, bin, spatial_styl
                 if not os.path.exists(directory):
                     os.makedirs(directory)
                 ext_id = get_ext_id(x, y, z, r, name, b)
-                spatial = f' -spatial {spatial_style}' if spatial_style != 'none' else ''
+                spatial_style = f' -spatial {style}' if style != 'none' else ''
                 if not args.stop:
                     f = b['media']
                     f = f'{folder}{f}'
                     media = 'A' if '.aac' in f or '.wav' in f or '.m4a' in f else 'AV'
-                    cmd = f'./{binary} -c {alias} -k {client_access_token} -l 3 -ld {directory} -initial-spatial-position {x};{y};{z} -initial-yaw-rotation {r} -u {name} -e {ext_id} -p user -m {media} --enable-media-io -f {f} -loop{spatial}'.split(' ')
+                    cmd = f'./{binary} -c {alias} -k {client_access_token} -l 3 -ld {directory} -initial-spatial-position {x};{y};{z} -initial-yaw-rotation {r} -initial-scale {scale} -u {name} -e {ext_id} -p user -m {media} --enable-media-io -f {f} -loop{spatial_style} -initial-right {right} -initial-up {up} -initial-forward {forward}'.split(' ')
                     cmds.append(Popen(cmd))
                 else:
                     stop_injection_process(directory)
     return cmds
 
-def setup_conference(client_access_token, alias, conversations, spatial_style, args):
+def setup_conference(client_access_token, alias, conversations, style, scale, right, up, forward, args):
     '''
     This method scans the assets and use injection input json parameters to construct the injection command
     '''
@@ -153,7 +158,7 @@ def setup_conference(client_access_token, alias, conversations, spatial_style, a
             for conversation in assets:
                 if conversation.startswith(c):
                     found = True
-                    commands += collect_commands(conversation, alias, client_access_token, bin, spatial_style, args)
+                    commands += collect_commands(conversation, alias, client_access_token, style, scale, right, up, forward, args)
             
             if not found:
                 print(f'Error - invalid conversation index specified {c}, request ignored')
@@ -170,8 +175,8 @@ def setup_cli():
 
 args = setup_cli()
 if not args.clear:
-    client_access_token, alias, conversations, spatial_style = parse_injection_input()
-    setup_conference(client_access_token, alias, conversations, spatial_style, args)
+    client_access_token, alias, conversations, style, scale, right, up, forward = parse_injection_input()
+    setup_conference(client_access_token, alias, conversations, style, scale, right, up, forward, args)
 else:
     if os.path.exists(directory_prefix):
         shutil.rmtree(directory_prefix)

@@ -8,7 +8,18 @@ All sytems:
 - Python 3
 - A Dolby.io account and access to the Dolby.io dashboard
 
-Linux only:
+macOS:
+- macOS 10.15+
+- Clang
+
+Windows:
+- Windows 10+
+- Windows SDK 10.0.20348.0+
+- MSVC 2019+
+
+Linux:
+- Ubuntu 20.04
+- gcc9+
 - PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
 
 ## Supported platforms
@@ -56,4 +67,15 @@ python3 demo.py -stop yes
 ```
 
 ## Access Token
-A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) must be provided to create the SDK. 
+A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) is required to connect to the Dolby.io platform. The `demo.py` script will scan the `injection-input.json` file and look for either the `token_server_url` field to find a url where it can fetch the token from; or the `client_access_token` field to find a token which is hardcoded into the file. The former takes precedent. The python script then passes the token as a command line parameter when running the `cpp-injection-demo` binary.
+
+## Opening in IDE
+### QtCreator (macOS/Ubuntu)
+ - After building with setup/unix.sh
+ - Open QtCreator
+ - Go to top bar settings and **QtCreator** -> **Open File or Project...** and select the top level CMakeLists.txt file (**cpp-injection-demo/CMakeLists.txt**)
+ - Create the project for x86_64 (or arm64 on macOS)
+
+### Visual Studio (Windows)
+ - After building with **setup\windows.bat** navigate to **build/** directory
+ - Double-click on **cpp_injection_demo.sln** in the **build/** directory

@@ -14,6 +14,7 @@ include(cmake/ffmpeg.cmake)
 include(cmake/windows.cmake)
 
 set(DOLBYIO_SHARE_DIR ${CMAKE_CURRENT_LIST_DIR}/ext-lib/sdk/share/)
+set(DOLBYIO_DEMO_CONTENT ${CMAKE_CURRENT_LIST_DIR}/demo-content/)
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
@@ -39,14 +40,12 @@ endif()
 add_subdirectory(${DOLBYIO_SHARE_DIR}/dolbyio/comms/sample/media_source)
 add_subdirectory(src)
 
-# Install the files to be injected and the python script
-install(DIRECTORY conversations 
-	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/"
+# Install all demo-content into the build directory 
+install(DIRECTORY ${DOLBYIO_DEMO_CONTENT}/conversations 
 	USE_SOURCE_PERMISSIONS
-)
-install(FILES demo.py
 	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/"
 )
-install(FILES injection-input.json
+install(FILES ${DOLBYIO_DEMO_CONTENT}/demo.py 
+	${DOLBYIO_DEMO_CONTENT}/injection-input.json
 	DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/"
 )

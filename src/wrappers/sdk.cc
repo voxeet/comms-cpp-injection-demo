@@ -84,10 +84,25 @@ async_result<void> sdk_wrapper::close_session() {
   return sdk_->session().close();
 }
 
-async_result<void> sdk_wrapper::set_spatial_configuration(
-    dolbyio::comms::spatial_audio_batch_update&& batch_update) {
+async_result<void> sdk_wrapper::apply_spatial_audio_configuration() {
   check_if_sdk_set();
+  auto params = get_params().conf;
 
+  // If using opus or listener or no spatial audio do nothing
+  if (!params.dolby_voice || !params.nonlistener_join ||
+      params.spatial == dolbyio::comms::spatial_audio_style::disabled) {
+    return {};
+  }
+  // Set the spatial environment, direction, position
+  spatial_audio_batch_update batch_update;
+  batch_update.set_spatial_environment(params.initial_scale,
+                                       params.initial_forward,
+                                       params.initial_up, params.initial_right);
+  batch_update.set_spatial_direction(params.initial_spatial_direction);
+  batch_update.set_spatial_position(session_info().participant_id.value(),
+                                    params.initial_spatial_position);
+
+  // Provide all updates in one go to the SDK
   return sdk_->conference().update_spatial_audio_configuration(
       std::move(batch_update));
 }
@@ -206,7 +221,7 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
       [this](const std::string& arg) {
         auto yaw = command_line::to_double(arg, "initial-yaw-rotation");
         params_.conf.initial_spatial_direction =
-            dolbyio::comms::spatial_direction{0, yaw, 0};
+            spatial_direction{0, yaw, 0};
       });
 
   handler.add_command_line_switch(
@@ -230,7 +245,108 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         auto y = std::stod(y_str);
         auto z = std::stod(z_str);
         params_.conf.initial_spatial_position =
-            dolbyio::comms::spatial_position{x, y, z};
+            spatial_position{x, y, z};
+      });
+
+  handler.add_command_line_switch(
+      {"-initial-scale"},
+      "<x;y;z>\n\tInitial spatial scale for the shared scene, default "
+      "\"5;5;5\". "
+      "Note: the separator between x, y and z "
+      "is semicolon, and the argument should be passes in quotation marks.",
+      [this](const std::string& arg) {
+        auto pos1 = arg.find(';');
+        if (pos1 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-scale", arg);
+        }
+        auto pos2 = arg.find(';', pos1 + 1);
+        if (pos2 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-scale", arg);
+        }
+        auto x_str = arg.substr(0, pos1);
+        auto y_str = arg.substr(pos1 + 1, pos2 - pos1 - 1);
+        auto z_str = arg.substr(pos2 + 1);
+        auto x = std::stod(x_str);
+        auto y = std::stod(y_str);
+        auto z = std::stod(z_str);
+        std::cerr << "----------->initial scale: " << x << y << z << std::endl;
+        params_.conf.initial_scale = spatial_scale{x, y, z};
+      });
+
+  handler.add_command_line_switch(
+      {"-initial-right"},
+      "<x;y;z>\n\tInitial right direction for the shared scene, default "
+      "\"5;5;5\". "
+      "Note: the separator between x, y and z "
+      "is semicolon, and the argument should be passes in quotation marks.",
+      [this](const std::string& arg) {
+        auto pos1 = arg.find(';');
+        if (pos1 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-right", arg);
+        }
+        auto pos2 = arg.find(';', pos1 + 1);
+        if (pos2 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-right", arg);
+        }
+        auto x_str = arg.substr(0, pos1);
+        auto y_str = arg.substr(pos1 + 1, pos2 - pos1 - 1);
+        auto z_str = arg.substr(pos2 + 1);
+        auto x = std::stod(x_str);
+        auto y = std::stod(y_str);
+        auto z = std::stod(z_str);
+        std::cerr << "----------->initial right: " << x << y << z << std::endl;
+        params_.conf.initial_right = spatial_position{x, y, z};
+      });
+
+  handler.add_command_line_switch(
+      {"-initial-up"},
+      "<x;y;z>\n\tInitial up direction for the shared scene, default "
+      "\"5;5;5\". "
+      "Note: the separator between x, y and z "
+      "is semicolon, and the argument should be passes in quotation marks.",
+      [this](const std::string& arg) {
+        auto pos1 = arg.find(';');
+        if (pos1 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-up", arg);
+        }
+        auto pos2 = arg.find(';', pos1 + 1);
+        if (pos2 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-up", arg);
+        }
+        auto x_str = arg.substr(0, pos1);
+        auto y_str = arg.substr(pos1 + 1, pos2 - pos1 - 1);
+        auto z_str = arg.substr(pos2 + 1);
+        auto x = std::stod(x_str);
+        auto y = std::stod(y_str);
+        auto z = std::stod(z_str);
+        std::cerr << "----------->initial up: " << x << y << z << std::endl;
+        params_.conf.initial_up = spatial_position{x, y, z};
+      });
+
+  handler.add_command_line_switch(
+      {"-initial-forward"},
+      "<x;y;z>\n\tInitial forward direction for the shared scene, default "
+      "\"5;5;5\". "
+      "Note: the separator between x, y and z "
+      "is semicolon, and the argument should be passes in quotation marks.",
+      [this](const std::string& arg) {
+        auto pos1 = arg.find(';');
+        if (pos1 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-forward", arg);
+        }
+        auto pos2 = arg.find(';', pos1 + 1);
+        if (pos2 == arg.npos) {
+          command_line::throw_bad_args_error("-initial-forward", arg);
+        }
+        auto x_str = arg.substr(0, pos1);
+        auto y_str = arg.substr(pos1 + 1, pos2 - pos1 - 1);
+        auto z_str = arg.substr(pos2 + 1);
+        auto x = std::stod(x_str);
+        auto y = std::stod(y_str);
+        auto z = std::stod(z_str);
+        std::cerr << "----------->initial forward: " << x << y << z << std::endl;
+
+        params_.conf.initial_forward = spatial_position{x, y, z};
       });
 }
 

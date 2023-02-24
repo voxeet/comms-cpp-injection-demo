@@ -1,0 +1,32 @@
+{
+    "access":
+    {
+        "token_server_url": "",
+        "client_access_token": ""    
+    },
+    "conf_alias": "demo",
+    "conversations": "00,01",
+    "spatial": {
+        "style": "shared",
+        "scale": {
+            "x": 5,
+            "y": 5,
+            "z": 5
+        },
+        "right": {
+            "x": 1,
+            "y": 0,
+            "z": 0
+        },
+        "up": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        },
+        "forward": {
+            "x": 0,
+            "y": 0,
+            "z": -1
+        }
+    }
+}

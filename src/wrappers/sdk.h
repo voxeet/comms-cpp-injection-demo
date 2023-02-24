@@ -41,8 +41,7 @@ class sdk_wrapper : public interactor {
   async_result<void> set_audio_processing(bool off = true);
   async_result<void> leave_conference();
   async_result<void> close_session();
-  async_result<void> set_spatial_configuration(
-      dolbyio::comms::spatial_audio_batch_update&& batch_update);
+  async_result<void> apply_spatial_audio_configuration();
 
   // Conference Info helpers
   dolbyio::comms::conference_info conference_info() { return conf_info_; }
@@ -53,6 +52,8 @@ class sdk_wrapper : public interactor {
   }
 
  private:
+  async_result<void> set_spatial_configuration(
+      dolbyio::comms::spatial_audio_batch_update&& batch_update);
   void check_if_sdk_set();
 
   dolbyio::comms::sdk* sdk_{nullptr};

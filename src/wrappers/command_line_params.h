@@ -51,8 +51,12 @@ struct sdk {
     bool send_only{false};
     bool simulcast{false};
     spatial_audio_style spatial{spatial_audio_style::shared};
-    dolbyio::comms::spatial_position initial_spatial_position{0, 0, 0};
-    dolbyio::comms::spatial_direction initial_spatial_direction{0, 0, 0};
+    spatial_position initial_spatial_position{0, 0, 0};
+    spatial_direction initial_spatial_direction{0, 0, 0};
+    spatial_scale initial_scale{5, 5, 5};
+    spatial_position initial_right{1, 0, 0};
+    spatial_position initial_up{0, 1, 0};
+    spatial_position initial_forward{0, 0, -1};
 
     bool join_as_user() const {
       return nonlistener_join.value_or(default_nonlistener_join);
