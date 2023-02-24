@@ -14,8 +14,8 @@ macOS:
 
 Windows:
 - Windows 10+
-- Windows SDK 10.0.20348.0+
-- MSVC 2019+
+- [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) 10.0.20348.0+
+- [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) 2019+
 
 Linux:
 - Ubuntu 20.04
@@ -23,37 +23,29 @@ Linux:
 - PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
 
 ## Supported platforms
-This project relies on the Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
+This project relies on the Dolby.io Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
 
 ## Building
-If building on Windows make sure you have installed msys2 shell and unzip inside of it.
-
+Before you can build you must clone this repo and go inside:
+```bash
+git clone git@github.com:dolbyio-samples/comms-cpp-injection-demo.git 
+cd cpp-injection-demo
 ```
-1. git clone git@github.com:dolbyio-samples/comms-cpp-injection-demo.git 
-2. cd cpp-injection-demo
-3. git checkout main 
+To build on macOS or Linux in terminal execute:
+```bash
+bash setup/unix.sh
 ```
-Building on MacOS or Linux in terminal navigate to the comms-cpp-injection-demo/ directory and run:
-```
-4. bash setup/unix.sh
-```
-Building on Windows in Command Prompt navigate to the comms-cpp-injection-demo\ directory and run:
-```
-4. setup\window.bat
+To build on Windows in Command Prompt execute:
+```bash
+setup\window.bat
 ```
 
 ## Getting Started
 The `demo.py` script will scan the `injection-input.json` file to determine which conversations it will inject into the conference. Based on the content of the `injection-input.json`, the `demo.py` script will take conversations in m4a or mp4 format from the respective folder and inject them at locations/rotations specified in the `def.json` files in the conversation folders.
 
-The environment set by the cpp application is as follows:
-```cpp
-dolbyio::comms::spatial_position right{1, 0, 0};
-dolbyio::comms::spatial_position up{0, 1, 0};
-dolbyio::comms::spatial_position forward{0, 0, -1};
-dolbyio::comms::spatial_scale scale{1, 1, 1};
-```
+The default spatial environment for the spatial scene is also parsed from the `injection-input.json` file. If you decide to change these values, please ensure your environment is in sync with the spatial settings of other clients joining the same conference. 
 
-Run the demo.py script and then follow the prompts: 
+Now to inject media into the conference execute the `demo.py` script: 
 ```
 cd build/
 python3 demo.py 
@@ -62,20 +54,20 @@ On MacOS/Windows the application will just run in terminal so entering **q** on 
 instance.
 
 When running on Ubuntu the process will run as daemon and is to be stopped using the python script:
-```
+```bash
 python3 demo.py -stop yes
 ```
 
 ## Access Token
 A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) is required to connect to the Dolby.io platform. The `demo.py` script will scan the `injection-input.json` file and look for either the `token_server_url` field to find a url where it can fetch the token from; or the `client_access_token` field to find a token which is hardcoded into the file. The former takes precedent. The python script then passes the token as a command line parameter when running the `cpp-injection-demo` binary.
 
-## Opening in IDE
+## Open Project IDE
 ### QtCreator (macOS/Ubuntu)
  - After building with setup/unix.sh
  - Open QtCreator
- - Go to top bar settings and **QtCreator** -> **Open File or Project...** and select the top level CMakeLists.txt file (**cpp-injection-demo/CMakeLists.txt**)
+ - Go to top bar settings and select `QtCreator -> Open File or Project...` and select the top level CMakeLists.txt file (`cpp-injection-demo/CMakeLists.txt`)
  - Create the project for x86_64 (or arm64 on macOS)
 
 ### Visual Studio (Windows)
- - After building with **setup\windows.bat** navigate to **build/** directory
- - Double-click on **cpp_injection_demo.sln** in the **build/** directory
+ - After building with `setup\windows.bat` navigate to `build/` directory
+ - Double-click on `cpp_injection_demo.sln` in the `build/` directory
