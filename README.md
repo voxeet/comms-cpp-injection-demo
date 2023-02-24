@@ -14,8 +14,8 @@ macOS:
 
 Windows:
 - Windows 10+
-- Windows SDK 10.0.20348.0+
-- MSVC 2019+
+- [Windows SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/) 10.0.20348.0+
+- [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) 2019+
 
 Linux:
 - Ubuntu 20.04
@@ -23,21 +23,21 @@ Linux:
 - PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
 
 ## Supported platforms
-This project relies on the Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
+This project relies on the Dolby.io Communications API C++ SDK, see this [link](https://api-references.dolby.io/comms-sdk-cpp/other/supported_platforms.html) for supported platforms.
 
 ## Building
 Before you can build you must clone this repo and go inside:
-```
+```bash
 git clone git@github.com:dolbyio-samples/comms-cpp-injection-demo.git 
 cd cpp-injection-demo
 ```
-Building on macOS or Linux in terminal run:
+To build on macOS or Linux in terminal execute:
+```bash
+bash setup/unix.sh
 ```
-4. bash setup/unix.sh
-```
-Building on Windows in Command Prompt run:
-```
-4. setup\window.bat
+To build on Windows in Command Prompt execute:
+```bash
+setup\window.bat
 ```
 
 ## Getting Started
@@ -54,7 +54,7 @@ On MacOS/Windows the application will just run in terminal so entering **q** on 
 instance.
 
 When running on Ubuntu the process will run as daemon and is to be stopped using the python script:
-```
+```bash
 python3 demo.py -stop yes
 ```
 
