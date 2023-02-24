@@ -8,7 +8,7 @@ All sytems:
 - Python 3
 - A Dolby.io account and access to the Dolby.io dashboard
 
-MacOS:
+macOS:
 - macOS 10.15+
 - Clang
 
@@ -67,7 +67,7 @@ python3 demo.py -stop yes
 ```
 
 ## Access Token
-A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) must be provided to create the SDK. 
+A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) is required to connect to the Dolby.io platform. The `demo.py` script will scan the `injection-input.json` file and look for either the `token_server_url` field to find a url where it can fetch the token from; or the `client_access_token` field to find a token which is hardcoded into the file. The former takes precedent. The python script then passes the token as a command line parameter when running the `cpp-injection-demo` binary.
 
 ## Opening in IDE
 ### QtCreator (macOS/Ubuntu)
