@@ -374,6 +374,7 @@ sdk_wrapper::conference_options() const {
   create.alias = params_.conf.alias;
   create.params.spatial_audio_style = params_.conf.spatial;
   create.params.dolby_voice = params_.conf.dolby_voice;
+  create.params.video_codec = params_.conf.video_codec;
   return create;
 }
 
