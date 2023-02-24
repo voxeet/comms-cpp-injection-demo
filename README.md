@@ -8,7 +8,18 @@ All sytems:
 - Python 3
 - A Dolby.io account and access to the Dolby.io dashboard
 
-Linux only:
+MacOS:
+- macOS 10.15+
+- Clang
+
+Windows:
+- Windows 10+
+- Windows SDK 10.0.20348.0+
+- MSVC 2019+
+
+Linux:
+- Ubuntu 20.04
+- gcc9+
 - PulseAudio Sound Server [runtime depedency](https://api-references.dolby.io/comms-sdk-cpp/other/run_time_deps.html#linux-systems)
 
 ## Supported platforms
@@ -57,3 +68,14 @@ python3 demo.py -stop yes
 
 ## Access Token
 A [Client Access Token](https://api-references.dolby.io/comms-sdk-cpp/other/getting_started.html#getting-the-access-token) must be provided to create the SDK. 
+
+## Opening in IDE
+### QtCreator (macOS/Ubuntu)
+ - After building with setup/unix.sh
+ - Open QtCreator
+ - Go to top bar settings and **QtCreator** -> **Open File or Project...** and select the top level CMakeLists.txt file (**cpp-injection-demo/CMakeLists.txt**)
+ - Create the project for x86_64 (or arm64 on macOS)
+
+### Visual Studio (Windows)
+ - After building with **setup\windows.bat** navigate to **build/** directory
+ - Double-click on **cpp_injection_demo.sln** in the **build/** directory
