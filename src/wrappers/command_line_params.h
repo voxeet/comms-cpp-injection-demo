@@ -26,8 +26,8 @@ double to_double(const std::string& value, const char* option);
 
 struct sdk {
   std::string access_token{};
-  dolbyio::comms::log_level sdk_log_level{log_level::INFO};
-  dolbyio::comms::log_level me_log_level{log_level::OFF};
+  log_level sdk_log_level{log_level::INFO};
+  log_level me_log_level{log_level::OFF};
   std::string log_dir{};
   std::string user_name{};
   std::string external_id{};
@@ -46,6 +46,7 @@ struct sdk {
     };
     std::optional<audio_video> send_audio_video{};
     audio_video default_send_audio_video{};
+    enum video_codec video_codec{video_codec::h264};
 
     bool dolby_voice{true};
     bool send_only{false};
@@ -75,11 +76,10 @@ struct sdk {
 struct mediaio {
   std::vector<std::string> files;
   std::string output_dir{"tmp"};
-  dolbyio::comms::plugin::recorder::video_recording_config vid_config{
-      dolbyio::comms::plugin::recorder::video_recording_config::
-          ENCODED_OPTIMIZED};
-  dolbyio::comms::plugin::recorder::audio_recording_config aud_config{
-      dolbyio::comms::plugin::recorder::audio_recording_config::PCM};
+  plugin::recorder::video_recording_config vid_config{
+      plugin::recorder::video_recording_config::ENCODED_OPTIMIZED};
+  plugin::recorder::audio_recording_config aud_config{
+      plugin::recorder::audio_recording_config::PCM};
   std::optional<bool> override_inject_audio_{};
   std::optional<bool> override_inject_video_{};
   bool loop_the_injection_{false};

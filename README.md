@@ -45,6 +45,8 @@ The `demo.py` script will scan the `injection-input.json` file to determine whic
 
 The default spatial environment for the spatial scene is also parsed from the `injection-input.json` file. If you decide to change these values, please ensure your environment is in sync with the spatial settings of other clients joining the same conference. 
 
+The video codec to be used when creating the conference is read from the `injection-input.json` file. If this injection instance is the first client to create the conference with given alias this video codec will be used for the conference. If the conference already exists the codec has already been set. The default in the file has been set to VP8.
+
 Now to inject media into the conference execute the `demo.py` script: 
 ```
 cd build/

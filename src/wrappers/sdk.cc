@@ -183,6 +183,21 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
       "Dolby Voice.",
       [this]() { params_.conf.dolby_voice = false; });
 
+  handler.add_command_line_switch(
+      {"-video-codec", "--video-codec"},
+      "[H264|VP8]\n\tSets video codec for creating the conference. If the "
+      "conference was already created this has no effect.",
+      [this](const std::string& arg) {
+        if (arg == "H264")
+          params_.conf.video_codec = video_codec::h264;
+        else if (arg == "VP8")
+          params_.conf.video_codec = video_codec::vp8;
+        else {
+          std::cerr << "Error acceptable values are H264 and VP8!";
+          command_line::throw_bad_args_error("-video-codec", arg);
+        }
+      });
+
   handler.add_command_line_switch({"-s", "--send_only"},
                                   "\n\tJoin as send-only user.",
                                   [this]() { params_.conf.send_only = true; });
@@ -220,8 +235,7 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
       {"-initial-yaw-rotation"}, "The yaw rotation angle 0-360 degrees",
       [this](const std::string& arg) {
         auto yaw = command_line::to_double(arg, "initial-yaw-rotation");
-        params_.conf.initial_spatial_direction =
-            spatial_direction{0, yaw, 0};
+        params_.conf.initial_spatial_direction = spatial_direction{0, yaw, 0};
       });
 
   handler.add_command_line_switch(
@@ -244,8 +258,7 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         auto x = std::stod(x_str);
         auto y = std::stod(y_str);
         auto z = std::stod(z_str);
-        params_.conf.initial_spatial_position =
-            spatial_position{x, y, z};
+        params_.conf.initial_spatial_position = spatial_position{x, y, z};
       });
 
   handler.add_command_line_switch(
@@ -269,7 +282,6 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         auto x = std::stod(x_str);
         auto y = std::stod(y_str);
         auto z = std::stod(z_str);
-        std::cerr << "----------->initial scale: " << x << y << z << std::endl;
         params_.conf.initial_scale = spatial_scale{x, y, z};
       });
 
@@ -294,7 +306,6 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         auto x = std::stod(x_str);
         auto y = std::stod(y_str);
         auto z = std::stod(z_str);
-        std::cerr << "----------->initial right: " << x << y << z << std::endl;
         params_.conf.initial_right = spatial_position{x, y, z};
       });
 
@@ -319,7 +330,6 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         auto x = std::stod(x_str);
         auto y = std::stod(y_str);
         auto z = std::stod(z_str);
-        std::cerr << "----------->initial up: " << x << y << z << std::endl;
         params_.conf.initial_up = spatial_position{x, y, z};
       });
 
@@ -344,8 +354,6 @@ void sdk_wrapper::register_command_line_handlers(commands_handler& handler) {
         auto x = std::stod(x_str);
         auto y = std::stod(y_str);
         auto z = std::stod(z_str);
-        std::cerr << "----------->initial forward: " << x << y << z << std::endl;
-
         params_.conf.initial_forward = spatial_position{x, y, z};
       });
 }
