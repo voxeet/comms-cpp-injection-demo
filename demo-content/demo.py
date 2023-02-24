@@ -87,6 +87,7 @@ def parse_injection_input():
             right = str(content['spatial']['right']['x']) + ";" + str(content['spatial']['right']['y']) + ";" + str(content['spatial']['right']['z'])
             up = str(content['spatial']['up']['x']) + ";" + str(content['spatial']['up']['y']) + ";" + str(content['spatial']['up']['z'])
             forward = str(content['spatial']['forward']['x']) + ";" + str(content['spatial']['forward']['y']) + ";" + str(content['spatial']['forward']['z'])
+            codec = content['video_codec']
             if len(token_server_url) > 0:
                 token = fetch_token(token_server_url)
                 if token is not None:
@@ -111,12 +112,16 @@ def parse_injection_input():
                 print(f'You have not specified a valid input [{spatial_style}] for "spatial_style", default value "shared" will be used')
                 spatial_style = 'shared'
 
-            return client_access_token, alias, conversations, style, scale, right, up, forward 
+            if codec not in ['VP8', 'H264']:
+                print(f'Your selected codec {codec} is not recognized, possible values are: H264 and VP8. Default H264 will be used')
+                codec = "H264"
+
+            return client_access_token, alias, conversations, style, scale, right, up, forward, codec
 
         except Exception as exp:
             print(f'Failed parsing injection input file: {exp}')
 
-def collect_commands(conversation, alias, client_access_token, style, scale, right, up, forward, args):
+def collect_commands(conversation, alias, client_access_token, style, scale, right, up, forward, codec, args):
     folder = f'{conversations_folder}/{conversation}/'
     def_json = f'{folder}def.json'
     cmds = []
@@ -138,13 +143,13 @@ def collect_commands(conversation, alias, client_access_token, style, scale, rig
                     f = b['media']
                     f = f'{folder}{f}'
                     media = 'A' if '.aac' in f or '.wav' in f or '.m4a' in f else 'AV'
-                    cmd = f'./{binary} -c {alias} -k {client_access_token} -l 3 -ld {directory} -initial-spatial-position {x};{y};{z} -initial-yaw-rotation {r} -initial-scale {scale} -u {name} -e {ext_id} -p user -m {media} --enable-media-io -f {f} -loop{spatial_style} -initial-right {right} -initial-up {up} -initial-forward {forward}'.split(' ')
+                    cmd = f'./{binary} -c {alias} -k {client_access_token} -l 3 -ld {directory} -initial-spatial-position {x};{y};{z} -initial-yaw-rotation {r} -initial-scale {scale} -u {name} -e {ext_id} -p user -m {media} --enable-media-io -f {f} -loop{spatial_style} -initial-right {right} -initial-up {up} -initial-forward {forward} -video-codec {codec}'.split(' ')
                     cmds.append(Popen(cmd))
                 else:
                     stop_injection_process(directory)
     return cmds
 
-def setup_conference(client_access_token, alias, conversations, style, scale, right, up, forward, args):
+def setup_conference(client_access_token, alias, conversations, style, scale, right, up, forward, codec, args):
     '''
     This method scans the assets and use injection input json parameters to construct the injection command
     '''
@@ -158,7 +163,7 @@ def setup_conference(client_access_token, alias, conversations, style, scale, ri
             for conversation in assets:
                 if conversation.startswith(c):
                     found = True
-                    commands += collect_commands(conversation, alias, client_access_token, style, scale, right, up, forward, args)
+                    commands += collect_commands(conversation, alias, client_access_token, style, scale, right, up, forward, codec, args)
             
             if not found:
                 print(f'Error - invalid conversation index specified {c}, request ignored')
@@ -175,8 +180,8 @@ def setup_cli():
 
 args = setup_cli()
 if not args.clear:
-    client_access_token, alias, conversations, style, scale, right, up, forward = parse_injection_input()
-    setup_conference(client_access_token, alias, conversations, style, scale, right, up, forward, args)
+    client_access_token, alias, conversations, style, scale, right, up, forward, codec = parse_injection_input()
+    setup_conference(client_access_token, alias, conversations, style, scale, right, up, forward, codec, args)
 else:
     if os.path.exists(directory_prefix):
         shutil.rmtree(directory_prefix)
