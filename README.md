@@ -2,6 +2,12 @@
 
 # Communications API C++ SDK Media Injection Demo
 
+A cross-platform native application utilizing the [Dolby.io C++SDK](https://api-references.dolby.io/comms-sdk-cpp/index.html) and [MultimediaStreaming Plugins](https://api-references.dolby.io/comms-sdk-cpp/api/sdk/injector.html#default-media-injector) to inject media from file into Dolby.io conferences. The application makes use of the [Media Source File](https://api-references.dolby.io/comms-sdk-cpp/api/sdk/injector.html#media-file-source-sample) sample library available in the SDK package to read audio and video from file and inject the content into the conference. Please note in the documentation the containers and formats supported by the sample library. 
+
+Perfect for showcasing the Dolby.io [Spatial Audio](https://docs.dolby.io/communications-apis/docs/guides-spatial-audio) features for Virtual World scenarios. The applications enables users to test out their Virtual World experiences created for instance with our [Unity](https://docs.dolby.io/communications-apis/docs/unity-overview) and [Unreal](https://docs.dolby.io/communications-apis/docs/unreal-overview) plugins by; injecting bots with audio and/or video around the scene.
+
+Currently uses the [2.3.1](https://github.com/DolbyIO/comms-sdk-cpp/releases/tag/2.3.1) release of the C++SDK. 
+
 ## Prerequisites
 All sytems:
 - CMake 3.23
