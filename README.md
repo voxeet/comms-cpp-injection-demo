@@ -12,6 +12,7 @@ Currently uses the [2.3.1](https://github.com/DolbyIO/comms-sdk-cpp/releases/tag
 All sytems:
 - CMake 3.23
 - Python 3
+  - requests module (pip3 install requests)
 - A Dolby.io account and access to the Dolby.io dashboard
 
 macOS:
@@ -43,7 +44,7 @@ bash setup/unix.sh
 ```
 To build on Windows in Command Prompt execute:
 ```bash
-setup\window.bat
+setup\windows.bat
 ```
 
 ## Getting Started
