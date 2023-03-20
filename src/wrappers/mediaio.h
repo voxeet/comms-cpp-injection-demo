@@ -44,7 +44,7 @@ class media_io_wrapper : public interactor {
   void new_file(bool add);
   void seek_to_in_file();
 
-  std::unique_ptr<plugin::injector_paced> injector_{};
+  std::shared_ptr<plugin::injector_paced> injector_{};
   std::unique_ptr<file_source> source_{};
   std::mutex sdk_lock_{};
   dolbyio::comms::sdk* sdk_;

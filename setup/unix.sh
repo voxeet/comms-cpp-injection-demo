@@ -1,10 +1,9 @@
 #!/bin/bash
 
-echo "If you want your own version and not default you must run script like:"
-echo "bash setup.sh {sdk_version}" 
+echo "If you want your own version and not default you must run script like: bash setup.sh {sdk_version}" 
 
-DEFAULT_SDK_VERSION="2.3.1"
 WORK_DIR="$(pwd)"
+DEFAULT_SDK_VERSION=$(cat "${WORK_DIR}/setup/sdk_version.txt")
 
 set_proper_sdk_version() {
 	sdk_version=$1
@@ -85,8 +84,7 @@ build_cpp_injection_demo() {
 }
 
 # Set the version of the SDK to use, default will be set if no arg
-# passed in
-set_proper_sdk_version
+set_proper_sdk_version $1
 
 # Enter ext-lib to place all the dependencies
 if [ ! -d $WORK_DIR/ext-lib ]; then

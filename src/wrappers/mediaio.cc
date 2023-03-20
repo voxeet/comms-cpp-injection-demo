@@ -88,7 +88,7 @@ async_result<void> media_io_wrapper::initialize_injection() {
     accumulator += sdk_->media_io().set_audio_source(injector_.get());
   if (video)
     accumulator +=
-        sdk_->video().local().start(camera_device(), injector_.get());
+        sdk_->video().local().start(camera_device(), injector_);
   return std::move(accumulator);
 }
 
