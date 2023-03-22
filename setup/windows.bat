@@ -1,10 +1,9 @@
 @echo off
 
-echo If you want your own version and not default you must run script like:
-echo setup.bat {sdk_version}
+echo If you want your own version and not default you must run script like: setup.bat {sdk_version}
 
-set DEFAULT_SDK_VERSION=2.3.1
 set "WORK_DIR=%cd%"
+set /p DEFAULT_SDK_VERSION=<%WORK_DIR%\setup\sdk_version.txt
 
 call :set_proper_sdk_version %*
 
