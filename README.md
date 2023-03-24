@@ -6,7 +6,7 @@ A cross-platform native application utilizing the [Dolby.io C++SDK](https://api-
 
 Perfect for showcasing the Dolby.io [Spatial Audio](https://docs.dolby.io/communications-apis/docs/guides-spatial-audio) features for Virtual World scenarios. The applications enables users to test out their Virtual World experiences created for instance with our [Unity](https://docs.dolby.io/communications-apis/docs/unity-overview) and [Unreal](https://docs.dolby.io/communications-apis/docs/unreal-overview) plugins by injecting bots with audio and/or video around the scene.
 
-Currently uses the [2.4.0](https://github.com/DolbyIO/comms-sdk-cpp/releases/tag/2.4.0) release of the C++SDK. 
+Currently uses the [2.4.1](https://github.com/DolbyIO/comms-sdk-cpp/releases/tag/2.4.1) release of the C++SDK. 
 
 ## Prerequisites
 All sytems:
