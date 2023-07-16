@@ -9,9 +9,9 @@
     "spatial": {
         "style": "shared",
         "scale": {
-            "x": 5,
-            "y": 5,
-            "z": 5
+            "x": 1,
+            "y": 1,
+            "z": 1
         },
         "right": {
             "x": 1,
