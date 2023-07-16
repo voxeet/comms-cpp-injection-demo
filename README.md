@@ -36,7 +36,7 @@ This project relies on the Dolby.io Communications API C++ SDK, see this [link](
 Before you can build you must clone this repo and go inside:
 ```bash
 git clone git@github.com:dolbyio-samples/comms-cpp-injection-demo.git 
-cd cpp-injection-demo
+cd comms-cpp-injection-demo
 ```
 To build on macOS or Linux in terminal execute:
 ```bash
