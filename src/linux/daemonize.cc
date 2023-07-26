@@ -45,7 +45,8 @@ daemonize::daemonize(const std::string &log_dir) {
   open("/dev/null", O_WRONLY);
 
   pid_ = getpid();
-  std::ofstream pid_file(log_dir + "/pid");
+  pid_file_ = log_dir + "/pid";
+  std::ofstream pid_file(pid_file_);
   pid_file << std::to_string(pid_);
 }
 
@@ -53,6 +54,7 @@ daemonize::~daemonize() {
   close(0);
   close(1);
   close(2);
+  remove(pid_file_.c_str());
 }
 
 void daemonize::wait_indefinitely() {

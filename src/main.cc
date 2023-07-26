@@ -13,6 +13,7 @@
 #include "utils/async_accumulator.h"
 #include "utils/commands_handler.h"
 
+#include <memory>
 #include <vector>
 
 using namespace dolbyio::comms::sample;
@@ -23,9 +24,8 @@ using namespace dolbyio::comms::sample;
 #include <execinfo.h>
 #include <signal.h>
 
-// Global unique_ptr for linux daemonization, because I was too lazy
-// to read sigaction and setting context for handler ;)
-std::unique_ptr<daemonize> daemonize_ptr{nullptr};
+// Global pointer for linux daemonization
+std::shared_ptr<daemonize> daemonize_ptr{nullptr};
 
 void signal_handler(int sig) {
   if (sig == SIGTERM && daemonize_ptr)
@@ -120,7 +120,21 @@ int main(int argc, char** argv) {
 
     // Run blocking loop
 #if defined(__linux__)
+    // If the conference has ended then we should unblock the loop.
+    // Not ideal because you could techinically race here with signal
+    // handler, but for our purposes it should be ok.
+    std::weak_ptr<daemonize> weak_daemoize_ptr{daemonize_ptr};
+    sdk->conference()
+        .add_event_handler(
+            [weak_daemoize_ptr](
+                const dolbyio::comms::conference_status_updated& status) {
+              if (status.is_ended() && !weak_daemoize_ptr.expired()) {
+                weak_daemoize_ptr.lock()->unblock_indefinte_wait();
+              }
+            })
+        .on_error([](auto&&) {});
     daemonize_ptr->wait_indefinitely();
+    daemonize_ptr.reset();
 #else
     while (!quit) {
       command_handler.print_interactive_options();
