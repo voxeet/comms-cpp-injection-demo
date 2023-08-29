@@ -34,6 +34,7 @@ class daemonize {
  private:
   void parent_exit(pid_t pid);
   pid_t pid_{-1};
+  std::string pid_file_{};
   sem_t semaphore_{};
 };
 

@@ -70,6 +70,8 @@ def stop_injection_process(folder):
         injector = open(folder + "/pid", "r")
         pid = injector.read()
         os.kill(int(pid), signal.SIGTERM)
+    else:
+        print("The PID file has already been removed, app is not running")
 
 def parse_injection_input():
     '''
